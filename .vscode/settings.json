@@ -18,28 +18,6 @@
     "editor.insertSpaces": false,
     "editor.formatOnSave": true
   },
-  "[json]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": false,
-    "editor.formatOnSave": true
-  },
-  "[yaml]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true
-  },
-  "[dockercompose]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.formatOnSave": true
-  },
-  "[dockerfile]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": false
-  },
-  "[dotenv]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": false
-  },
   "[markdown]": {
     "editor.tabSize": 2,
     "editor.insertSpaces": false
