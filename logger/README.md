@@ -25,12 +25,12 @@ import (
 
 
 func main() {
-	logger.Enrich(
-		func(l *logger.LoggerConfig) {
-			l.WithContextFields(func(c zerolog.Context) zerolog.Context {
+	logger.Configure(
+		func(cfg *logger.LoggerConfig) {
+			cfg.WithContextFields(func(c zerolog.Context) zerolog.Context {
 				return c.Str("version", "1.0.0")
 			})
-			l.WithEventFields(func(ctx context.Context, e *zerolog.Event) *zerolog.Event {
+			cfg.WithEventFields(func(ctx context.Context, e *zerolog.Event) *zerolog.Event {
 				return e.Str("trace_id", getTraceID(ctx))
 			}),
 		}
