@@ -1,0 +1,25 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": false,
+  "go.coverageOptions": "showCoveredCodeOnly",
+  "go.coverageDecorator": {
+    "type": "gutter",
+    "coveredGutterStyle": "slashgreen",
+    "uncoveredGutterStyle": "slashred"
+  },
+  "go.coverMode": "atomic",
+  "go.coverOnSave": false,
+  "go.coverOnTestPackage": false,
+  "go.formatTool": "gofmt",
+  "go.lintOnSave": "package",
+  "go.toolsManagement.autoUpdate": true,
+  "[go]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": false,
+    "editor.formatOnSave": true
+  },
+  "[markdown]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": false
+  }
+}
