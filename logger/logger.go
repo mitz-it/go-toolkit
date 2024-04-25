@@ -85,10 +85,16 @@ type LogEventOption func(ctx context.Context, e *zerolog.Event) *zerolog.Event
 // Example usage:
 //
 //	logContext := logger.CreateLoggerContext(
+//		os.Stdout,
 //		func(c zerolog.Context) zerolog.Context {
 //			return c.Str("service", "myService")
 //		},
 //	)
+//
+// Params:
+//
+//	w (io.Writer): The new output destination for log messages.
+//	opts (...logger.LoggerContextOption): Optional functions that modifies zerolog.Context for additional contextual logging setup.
 //
 // Returns:
 //
@@ -118,6 +124,10 @@ func CreateLoggerContext(w io.Writer, opts ...LoggerContextOption) zerolog.Conte
 //			})
 //		},
 //	)
+//
+// Params:
+//
+// opts (...logging.LoggerOption) Optional functions that modifies the LoggerConfig.
 //
 // Returns:
 //
