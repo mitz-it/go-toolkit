@@ -25,6 +25,7 @@ import (
 
 
 func main() {
+	// logger output default is os.Stdout
 	logger.Configure(
 		func(cfg *logger.LoggerConfig) {
 			cfg.WithContextFields(func(c zerolog.Context) zerolog.Context {
