@@ -8,7 +8,7 @@
     "uncoveredGutterStyle": "slashred"
   },
   "go.coverMode": "atomic",
-  "go.coverOnSave": false,
+  "go.coverOnSave": true,
   "go.coverOnTestPackage": false,
   "go.formatTool": "gofmt",
   "go.lintOnSave": "package",

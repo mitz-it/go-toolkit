@@ -26,43 +26,27 @@ func (h *Host) Start() error {
 		h.ShutdownTimeout = 30 * time.Second
 	}
 
-	switch true {
-	case h.Router != nil:
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
+	if h.Router == nil && len(h.Workers) == 0 {
+		return fmt.Errorf("no router or workers added, host will not start")
+	}
 
-		ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
-		defer stop()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-		h.wg = &sync.WaitGroup{}
+	ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
+	defer stop()
 
+	h.wg = &sync.WaitGroup{}
+
+	if len(h.Workers) > 0 {
 		h.work(ctx)
+	}
 
+	if h.Router != nil {
 		h.serve(ctx, cancel)
-
 		<-ctx.Done()
 		logger.Info(context.Background()).Msg("host shutdown started")
-		defer logger.Info(context.Background()).Msg("host shutdown completed")
-		h.wg.Wait()
-
-		ctx, cancel = context.WithTimeout(context.Background(), h.ShutdownTimeout)
-		defer cancel()
-
-		if err := h.server.Shutdown(ctx); err != nil {
-			logger.Info(context.Background()).Msg("HTTP server was forced to shutdown")
-		}
-		return nil
-	case h.Router == nil && len(h.Workers) > 0:
-		ctx, cancel := context.WithCancel(context.Background())
-		defer cancel()
-
-		ctx, stop := signal.NotifyContext(ctx, syscall.SIGINT, syscall.SIGTERM)
-		defer stop()
-
-		h.wg = &sync.WaitGroup{}
-
-		h.work(ctx)
-
+	} else {
 		waitCh := make(chan struct{})
 		go func() {
 			h.wg.Wait()
@@ -72,17 +56,24 @@ func (h *Host) Start() error {
 		select {
 		case <-ctx.Done():
 			logger.Info(context.Background()).Msg("host shutdown started")
-			defer logger.Info(context.Background()).Msg("host shutdown completed")
 		case <-waitCh:
 			logger.Info(context.Background()).Msg("all workers done processing, host is shutting down")
 		}
-
-		h.wg.Wait()
-		stop()
-		return nil
-	default:
-		return fmt.Errorf("no router or workers added, host will not start")
 	}
+
+	defer logger.Info(context.Background()).Msg("host shutdown completed")
+	h.wg.Wait()
+
+	ctx, cancel = context.WithTimeout(context.Background(), h.ShutdownTimeout)
+	defer cancel()
+
+	if h.server != nil {
+		if err := h.server.Shutdown(ctx); err != nil {
+			logger.Info(context.Background()).Msg("HTTP server was forced to shutdown")
+		}
+	}
+
+	return nil
 }
 
 func (h *Host) serve(ctx context.Context, cancel context.CancelFunc) {
